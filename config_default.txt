@@ -1,0 +1,9 @@
+[binaries]
+#specify the paths required by icb.py
+blast = /path/toyour/ncbi-blast-2.2.29+/bin/
+hhsuite = /path/toyour/hhsuite-*.*/bin/
+swissprot = /path/toyour/swissprotdb/
+signalp = /path/toyour/signalp/signalp-4.1
+tmhmm = /path/toyour/tmhmm-2.0c/bin/
+interproscan = /path/toyour/interproscan/
+iupred = /path/toyour/iupred-1.0/
