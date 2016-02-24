@@ -1,0 +1,9 @@
+[binaries]
+#specify the paths required by icb.py
+blast = /home/programs/ncbi-blast-2.2.29+/bin/
+hhsuite = /home/programs/hhsuite-2.0.16-linux-x86_64/bin/
+swissprot = /scratch/db/Blast/
+signalp = /home/programs/signalp-4.1
+tmhmm = /home/programs/tmhmm-2.0c/bin/
+interproscan = /home/programs/interproscan-5.16-55.0/
+iupred = /home/programs/iupred-1.0/
