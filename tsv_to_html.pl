@@ -35,7 +35,7 @@ print <<END;
 </head>
 END
 
-print 	"<address>By <b>Juan Carlos Gonzalez Sanchez</b> (juancarlosgonzs\@gmail.com) and <b>Damien P. Devos</b> (dpdev\@upo.es)<br>\n",
+print 	"<address>By <b>Juan Carlos Gonzalez Sanchez</b> (juancarlosgonzs\@gmail.com) and <b>Nicola Bordin</b> (nbor1\@upo.es)<br>\n",
 		"Centro Andaluz de Biologia del Desarrollo. Universidad Pablo de Olavide. Sevilla<br>\n",
 		"1 May 2015</address>\n",
 		
