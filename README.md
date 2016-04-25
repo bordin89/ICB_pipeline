@@ -1,6 +1,5 @@
 # ICB_pipeline
 Integrative Cell Biology Pipeline
-
 1. Introduction
 
 The Integrative Cell Biology Pipeline is a tool made by biologists for biologists.
