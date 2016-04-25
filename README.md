@@ -18,10 +18,15 @@ In order to run ICB, your system needs the following programs and tools.
 Due to the modular approach, you need to install one, a few or all the following tools (according to your needs).
 
 -PSIBLAST
+
 -HHsuite
+
 -InterProScan
+
 -PSIPRED
+
 -IUPRED
+
 -TMHMM
 
 The config.txt file
