@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>cICB Pipeline by bordin89</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">cICB Pipeline</h1>
+      <h2 class="project-tagline">Integrative Cell Biology Pipeline</h2>
+      <a href="https://github.com/bordin89/ICB_pipeline" class="btn">View on GitHub</a>
+      <a href="https://github.com/bordin89/ICB_pipeline/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/bordin89/ICB_pipeline/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h3>
+<a id="welcome-to-cicb-pipeline" class="anchor" href="#welcome-to-cicb-pipeline" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Welcome to cICB Pipeline!</h3>
+
+<p>cICB is a computational pipeline for protein annotation. Using an integrative approach, it allows the user to annotate several protein features such as domains, TMHs, disorder and identity through <a href="http://blast.ncbi.nlm.nih.gov/Blast.cgi?PROGRAM=blastp&amp;PAGE_TYPE=BlastSearch&amp;LINK_LOC=blasthome">PSIBLAST</a>, <a href="http://toolkit.tuebingen.mpg.de/hhpred">HHpred</a> and <a href="http://www.ebi.ac.uk/interpro/search/sequence-search">InterProScan</a>. </p>
+
+<h3>
+<a id="system-requirements" class="anchor" href="#system-requirements" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>System Requirements</h3>
+
+<p>In order to run ICB, your system needs the following programs and tools.</p>
+
+<ul>
+<li>Any Linux distribution</li>
+<li>Python 2.7.x</li>
+<li>Perl 5.x or newer</li>
+<li>Bash</li>
+</ul>
+
+<p>Due to the modular approach, you need to install one, a few or all the following tools (according to your needs).</p>
+
+<p>-PSIBLAST  </p>
+
+<p>-HHsuite  </p>
+
+<p>-InterProScan</p>
+
+<p>-PSIPRED</p>
+
+<p>-IUPRED</p>
+
+<p>-TMHMM</p>
+
+<h3>
+<a id="the-configtxt-file" class="anchor" href="#the-configtxt-file" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>The config.txt file</h3>
+
+<p>A config.txt file is included in the ICB package.
+After installing the tools required by ICB, please modify the config.txt file according to your installation paths and the amount of cores available for BLAST and HHblits/HHpred.</p>
+
+<h3>
+<a id="database-requirements" class="anchor" href="#database-requirements" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Database Requirements</h3>
+
+<p>The PSIBLAST Module requires a custom, reduced version of UniProt/SwissProt, available at <a href="http://pvcbacteria.org/mywiki/databases/">http://pvcbacteria.org/mywiki/databases/</a></p>
+
+<h3>
+<a id="input-requirements" class="anchor" href="#input-requirements" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Input Requirements</h3>
+
+<p>The pipeline takes as an input a single or a multiFASTA with the filename ending with "_proteins.fa"</p>
+
+<h3>
+<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Usage</h3>
+
+<p>To run the pipeline, call the main script with  </p>
+
+<div class="highlight highlight-source-shell"><pre>$ python icb.py -i your_seq_proteins.fa </pre></div>
+
+<p>Use the following flags:</p>
+
+<ul>
+<li>-o output folder (default-&gt;cwd)</li>
+<li>-psi  PSIBLAST</li>
+<li>-tmh  TMHMM</li>
+<li>-hhpred HHpred on PDB</li>
+<li>-hhblits HHblits on UniProtKB</li>
+<li>-sigp SignalP</li>
+<li>-iup IUPRED</li>
+<li>-all Runs all modules</li>
+</ul>
+
+<h3>
+<a id="currently-on-development" class="anchor" href="#currently-on-development" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Currently on Development</h3>
+
+<p>Docker Images and data visualization</p>
+
+<h3>
+<a id="authors-and-contributors" class="anchor" href="#authors-and-contributors" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Authors and Contributors</h3>
+
+<p>The pipeline was firstly developed by Juan Carlos González-Sanchez. Current development is carried by Nicola Bordin.</p>
+
+<h3>
+<a id="contact" class="anchor" href="#contact" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Contact</h3>
+
+<p>Nicola Bordin<br>
+Centro Andaluz de Biologia del Desarollo<br>
+Universidad Pablo de Olavide<br>
+Sevilla<br>
+Spain<br>
+<a href="mailto:nbor1@upo.es">nbor1@upo.es</a>  </p>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/bordin89/ICB_pipeline">cICB Pipeline</a> is maintained by <a href="https://github.com/bordin89">bordin89</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
