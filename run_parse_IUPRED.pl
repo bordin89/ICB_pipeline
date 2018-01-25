@@ -3,7 +3,7 @@
 # MODULE 3	
 # DISORDER prediction
 #
-# Version 1.1 (11 April, 2016)
+# Version 1.1 (24 January, 2018)
 #
 # Juan Carlos González Sánchez & Nicola Bordin
 # Centro Andaluz de Biología del Desarrollo (CABD)
