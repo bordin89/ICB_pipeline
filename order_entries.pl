@@ -67,8 +67,4 @@ close (OUT);
 
 rename $output, $input;
 
-# foreach my$key (keys %found){
-# 	if (!$found{$key} == 1){
-# 		print "\nError in: $key","\tappears ",$found{$key}," times\n";
-# 	}
-# }
+
