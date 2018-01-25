@@ -1,6 +1,6 @@
 # - *- coding: utf- 8 - *-
 #!/usr/bin/python
-#Nicola Bordin, Juan Carlos Gonzalez Sanchez CABD Universidad Pablo de Olavide, Sevilla
+#Nicola Bordin CABD Universidad Pablo de Olavide, Sevilla
 #Integrative Cell Biology Pipeline 1.0
 #Executes scripts for automated analysis of proteomes
 import sys,os,re,collections,argparse,glob,operator,subprocess,ConfigParser
@@ -48,7 +48,8 @@ print "HHblits\n"
 print "Execution Parameters"
 #Parsing config file
 config = ConfigParser.ConfigParser()
-config.readfp(open(r'config.txt'))
+config_path = os.path.dirname(os.path.realpath(sys.argv[0]))+"/config.txt"
+config.readfp(open(config_path))
 blast_path = config.get('binaries', 'blast')
 interproscan_path =config.get('binaries','interproscan')
 tmhmm_path = config.get('binaries', 'tmhmm')
@@ -107,7 +108,7 @@ if interproscan or allmodules==True:
 		os.system("cp "+multifasta+" InterProScan_results/"+multifasta)
 		os.system("cd InterProScan_results/")
 		os.system("perl "+os.path.dirname(os.path.realpath(sys.argv[0]))+"/splitfasta_mod.pl "+multifasta)
-		os.system("for file in *.seq; do "+interproscan_path+"/interproscan.sh -i $file -d InterProScan_results -f tsv,xml -iprlookup -goterms -pa; done")
+		os.system("for file in *.seq; do "+interproscan_path+"/interproscan.sh -mode cluster -clusterrunid iproscan -i $file -d InterProScan_results -f tsv,xml -iprlookup -goterms -pa; done")
 		os.system("cd ../")
 		os.system("cat InterProScan_results/*.xml > InterProScan_results/InterProScan_dump_"+multifasta[:-11])
 		os.system("rm *.seq && rm -rf temp/")
@@ -127,8 +128,9 @@ if hhblits or allmodules==True:
 	if os.path.isdir(current_path+"/HHblits_results") == False:
 		os.system("mkdir HHblits_results")
 		os.system("perl "+os.path.dirname(os.path.realpath(sys.argv[0]))+"/splitfasta_mod.pl "+multifasta)
-		os.system("mv *.seq HHblits_results/")
-		os.system("perl "+multithread+"/multithread.pl 'HHblits_results/*.seq' '"+hhsuite_path+"/hhblits -i $file -d "+uniprot+" -oa3m $name.a3m -n 2 -Z 100 -B 100' -cpu "+cpus)
+		#os.system("mv *.seq HHblits_results/")
+		os.system("find . -type d -o -prune -name '*.seq' -exec mv -t HHblits_results/ {} +")
+		os.system("perl "+multithread+"/multithread.pl 'HHblits_results/*.seq' '"+hhsuite_path+"/hhblits -i $file -d "+uniprot+" -oa3m $name.a3m -n 2' -cpu "+cpus+" -v 0")
 		os.system("gzip -f HHblits_results/*.hhr")
 	else:
 		print "HHblits results folder already present!"
@@ -145,11 +147,12 @@ if hhpred or allmodules==True:
 	if os.path.isdir(current_path+"/HHpred_results") == False:
 		os.system("mkdir HHpred_results")
 		os.system("perl "+os.path.dirname(os.path.realpath(sys.argv[0]))+"/splitfasta_mod.pl "+multifasta)
-		os.system("mv *.seq HHpred_results/")
-		os.system("perl "+multithread+"/multithread.pl 'HHpred_results/*.seq' '"+hhsuite_path+"/hhblits -i $file -d "+uniprot+" -oa3m $name.a3m -n 2 -Z 100 -B 100' -cpu "+cpus)
-		os.system("perl "+multithread+"/multithread.pl 'HHpred_results/*.a3m' '"+multithread+"/addss.pl $file' -cpu "+cpus)
-		os.system("perl "+multithread+"/multithread.pl 'HHpred_results/*.a3m' '"+hhsuite_path+"/hhmake -i $file' -cpu "+cpus)
-		os.system("perl "+multithread+"/multithread.pl 'HHpred_results/*.hhm' '"+hhsuite_path+"/hhsearch -i $file -d "+pdb+" -Z 100 -B 100' -cpu "+cpus)
+		#os.system("mv *.seq HHpred_results/")
+		os.system("find . -type d -o -prune -name '*.seq' -exec mv -t HHpred_results/ {} +")
+		os.system("perl "+multithread+"/multithread.pl 'HHpred_results/*.seq' '"+hhsuite_path+"/hhblits -i $file -d "+uniprot+" -oa3m $name.a3m -n 2' -cpu "+cpus)
+		os.system("perl "+multithread+"/multithread.pl 'HHpred_results/*.a3m' '"+multithread+"/addss.pl $file' -cpu "+cpus+" -v 0")
+		os.system("perl "+multithread+"/multithread.pl 'HHpred_results/*.a3m' '"+hhsuite_path+"/hhmake -i $file' -v 0 -cpu "+cpus+" -v 0")
+		os.system("perl "+multithread+"/multithread.pl 'HHpred_results/*.hhm' '"+hhsuite_path+"/hhsearch -i $file -d "+pdb+" -v 0' -cpu "+cpus+" -v 0")
 		os.system("gzip -f HHpred_results/*.hhr")
 	else:
 		print "HHpred results folder already present!"
