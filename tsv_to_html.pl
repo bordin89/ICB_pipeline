@@ -175,8 +175,7 @@ body {
 }
 </style>
 </head>
-#<h1><img src="lablogo.png" alt="lablogo" style="width:160px;height:89px;float:left;"><img src="logo.jpg" alt="CABD" style="width:160px;height:89px;float:left;"><span> $table_name proteome annotation</span></h1>
-<h1><img src="lablogo.png" alt="lablogo" style="width:160px;height:89px;float:left;"><img src="logo.jpg" alt="CABD" style="width:160px;height:89px;float:left;"><span> $table_name proteome annotation</span></h1>
+<h1><span> $table_name proteome annotation</span></h1>
 <body onload="myFunction()" style="margin:0;">
 
 <div id="loader"></div>
