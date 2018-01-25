@@ -1,3 +1,5 @@
+#Modify according to your system configuration and paths. Rename to "config.txt"
+
 [binaries]
 #specify the paths required by icb.py
 blast = /path/toyour/ncbi-blast-2.2.29+/bin/
