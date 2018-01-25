@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 #
-# Juan Carlos Gonzalez-Sanchez
+# Juan Carlos Gonzalez Sanchez & Nicola Bordin
 #
 ## Usage:
 ##       ~$ perl <this_script.pl> <fasta_file> <psiblast_output>
@@ -18,10 +18,10 @@ my $psiblast_output     		= $ARGV[1];
 my $database 				= $ARGV[2];#"/home/db/Uniprot/UniProt_SwissProt_text/reduced_uniprot_sprot.dat";
 my $output_file				= "01_PSIBLAST_".$ARGV[3].".tsv";
 
-my $evalue_cutoff 			= 0.001; 	# Cutoff for E-value above which subjects will be discarded	
-my $coverage_cutoff 			= 0.75; 	# Cutoff for Coverage							
-my $subjects_to_include 		= 1; 		# Number of subjects to include in final annotation 
-	
+my $evalue_cutoff 			= 0.001; 	# Cutoff for E-value above which subjects will be discarded
+my $coverage_cutoff 			= 0.75; 	# Cutoff for Coverage
+my $subjects_to_include 		= 1; 		# Number of subjects to include in final annotation
+
 
 ###########################################################################################################
 
@@ -43,19 +43,19 @@ my ($total_pts,	# for total of proteins
 	$pred_per,		# and %
 	$like,			# for "-like proteins"
 	$like_per,		# and %
-	) = (0,0,0,0,0,0,0,0,0,0); 
+	) = (0,0,0,0,0,0,0,0,0,0);
 my %hyp;
 
 open (IN, "$fasta_file") or die $!;
 
 while (<IN>) {
 
-    # NCBI like header      
+    # NCBI like header
 	if ($_ =~ /^>.*ref\|(.+)\|/ or $_ =~ /^>.*gi\|(.+)\|/ ){
 		$name =$1;
-	#	print $name,"\n";	
+	#	print $name,"\n";
 		$source="NCBI";
-		
+
 		$total_pts++;
 		if ($_ =~ /hypothetical protein/ or $_ =~ /unknown/ ) {
 			$hyp{$name}++;
@@ -76,15 +76,16 @@ while (<IN>) {
 		$name =$1;
 
 		$source="UniProt";
-		
+
 		$total_pts++;
 		if ($_ =~ /[Uu]ncharacterized.*protein/ ) {
 			$hyp{$name}++;
-		}	
+		}
 
-    # Other 
-	} elsif ($_ =~ /^>(.+)/) {	
+    # Other
+	} elsif ($_ =~ /^>(.+)/) {
 		$name = $1;
+		$total_pts++;
 
     # Sequence
 	} elsif ($_ =~ /^\w/) {
@@ -116,10 +117,10 @@ while (<IN2>){
 	if ($_ =~ /^\# Iteration:\s(\d)/) {
 		$iteration = $1;
 
-	} elsif ($_ =~ /^\# Query.*ref\|(.+)\|/ or $_ =~ /^\# Query.*gi\|(.+)\|/ or $_ =~ /^\# Query.+\|([^\s]+)\|/ or $_ =~ /^\# Query(.+)/) {	
+	} elsif ($_ =~ /^\# Query.*ref\|(.+)\|/ or $_ =~ /^\# Query.*gi\|(.+)\|/ or $_ =~ /^\# Query.+\|([^\s]+)\|/ or $_ =~ /^\# Query(.+)/) {
 		$query = $1;
 		$last_iteration{$query}=$iteration;
-	}	
+	}
 	}
 
 close (IN2);
@@ -147,45 +148,45 @@ while (<IN2>){
 
 	if ($_ =~ /^\# PSIBLAST/) {
 		undef $iteration;
-		$query = "";	
+		$query = "";
 		$i = 0;
 
 	} elsif ($_ =~ /^\# Iteration:\s(\d)/) {
-		$iteration = $1;							
+		$iteration = $1;
 
-	} elsif ($_ =~ /^\# Query.*ref\|(.+)\|/ or $_ =~ /^\# Query.*gi\|(.+)\|/ or $_ =~ /^\# Query.+\|([^\s]+)\|/ or $_ =~ /^\# Query(.+)/){	
-		$query = $1;						
+	} elsif ($_ =~ /^\# Query.*ref\|(.+)\|/ or $_ =~ /^\# Query.*gi\|(.+)\|/ or $_ =~ /^\# Query.+\|([^\s]+)\|/ or $_ =~ /^\# Query(.+)/){
+		$query = $1;
 		$query_length = $protein_length{$query};
-		
+
 		next if exists $query_order{$query};
-		if ($iteration == $last_iteration{$query}) {		
+		if ($iteration == $last_iteration{$query}) {
 			$n++;
 			$query_order{$query}=$n;
 		}
 	}
-	
- 	next unless (defined $iteration && defined $query_order{$query});
- 	next if ($_ =~ /^\#/); 
 
-	### MODIFIY!!	
- 	#next if ($i >= $subjects_to_include); # IMPORTANT: this makes that we just keep the number of subjects we choose.				
+ 	next unless (defined $iteration && defined $query_order{$query});
+ 	next if ($_ =~ /^\#/);
+
+	### MODIFIY!!
+ 	#next if ($i >= $subjects_to_include); # IMPORTANT: this makes that we just keep the number of subjects we choose.
 
 	# [0]query_id  [1]subject_id [2]identity [3]alignment_length [4]mismatches [5]gap opens [6]q.start [7]q.end [8]s.start [9]s.end [10]evalue [11]bit score
-	@values = split("\t",$_); next if (scalar @values < 12); 
+	@values = split("\t",$_); next if (scalar @values < 12);
 
 	# RESTRICTIONS TO INCLUDE subjectS
 	#1 EVALUE
 	$evalue = $values[10];
 	next unless ($evalue < $evalue_cutoff);
-	
+
  	#2 COVERAGE
  	$coverage_query = sprintf ("%.3f", (($values[7]-$values[6]+1)/$query_length)); # This checks the coverage of the alignment respect the whole query sequence legth
 	next unless ($coverage_query >= $coverage_cutoff) ;
 
-	$values[1] =~ /\w+\|\d+\|\w+\|([^\.]+)\.\d\|.+/; $subject = $1; 
+	$values[1] =~ /\w+\|\d+\|\w+\|([^\.]+)\.\d\|.+/; $subject = $1;
 	next if (exists $subject_order{$query}{$subject});
 	next if ($query eq $subject);
-	
+
 	$all_subj{$subject}=1;
 	$subject_order{$query}{$subject} = $i;
 	$i++;
@@ -196,9 +197,9 @@ while (<IN2>){
 }
 
 close (IN2);
-undef $_ for $query,$query_length,$subject,$evalue,$coverage_query,@values;			
+undef $_ for $query,$query_length,$subject,$evalue,$coverage_query,@values;
 
-	
+
 ## Annotate subject list and print it in a temporal file
 my ($annot_prots_count,
 	$unknown_and_annotated,
@@ -206,15 +207,15 @@ my ($annot_prots_count,
 	$ac_found,
 	%annotation_subject,
 	$coverage_subject,
-	%hit);	
+	%hit);
 
 my ($length,@acs,%subject_length,%subject_gene,%subject_desc,%subject_dr,%subject_kw,%subject_ec);
 my ($gene,$desc,$dr,$kw,$ec,$info) = ("-","-","-","-","-","");
 
 open (DATABASE, "$database") or die $!;
 while (<DATABASE>) {
-	
-	if ($_ =~ /^ID\s+([^\s]+).+;\s+(\d+)\sAA.$/) {	
+
+	if ($_ =~ /^ID\s+([^\s]+).+;\s+(\d+)\sAA.$/) {
 		$length = $2;
 		$gene="-";
 		$desc="-";
@@ -224,19 +225,19 @@ while (<DATABASE>) {
 		@acs=();
 
 	} elsif ($_ =~ /^AC\s+(.+)/) {
-		@acs = split(";",$1); 	
-	
+		@acs = split(";",$1);
+
 	} elsif ($_ =~ /^DE / and $desc eq "-") {
 		$_ =~ /=(.+?)[;\{]/;
 		$desc = $1;
-	
+
 	} elsif ($_ =~ /^DE\s+EC=(.+?)[\s;]/){
 		$ec = "EC=".$1;
-	
+
 	} elsif ($_ =~ /^GN/ and $gene eq "-") {
 		$_ =~ /=(.+?)[;\{,]/;
 		$gene = $1;
- 
+
 	} elsif ($_ =~ /^DR\s+(.+)\n/) {
 		$info=$1;
 		$info =~ s/GO;\s//;
@@ -245,7 +246,7 @@ while (<DATABASE>) {
 		}else{
 			$dr .= $info;
 		}
-	
+
 	} elsif ($_ =~ /^KW\s+(.+)\n/) {
 		if ($kw eq "-"){
 			$kw = $1;
@@ -256,7 +257,7 @@ while (<DATABASE>) {
 	} elsif ($_ =~ /^\/\//) {
 		foreach my $ac(@acs) {
 			$ac =~ s/\s//;
-			if ( exists $all_subj{$ac}) { 
+			if ( exists $all_subj{$ac}) {
 				$subject_length{$ac}=$length;
 				$subject_gene{$ac}=$gene;
 				$subject_desc{$ac}=$desc;
@@ -265,7 +266,7 @@ while (<DATABASE>) {
 				$subject_ec{$ac}=$ec;
 			}
 		}
-	}	
+	}
 }
 close (DATABASE);
 
@@ -273,15 +274,15 @@ my $to_print;
 open (OUT, ">$output_file");
 print OUT "Query\tBest PSIBLAST Hit: Uniprot Accession [+stats]\tBest PSIBLAST Hit: Gene\tBest PSIBLAST Hit: Description\tBest PSIBLAST Hit: GO terms\tBest PSIBLAST Hit: Keywords\tBest PSIBLAST Hit: EC number\n";
 
-foreach my $query (sort {$query_order{$a} <=> $query_order{$b}} keys %query_order) { 
-	
+foreach my $query (sort {$query_order{$a} <=> $query_order{$b}} keys %query_order) {
+
 	print OUT $query,"\t";
 	$to_print="-\t-\t-\t-\t-\t-";
-	
+
 	foreach my $subject(sort {$subject_order{$query}{$a} <=> $subject_order{$query}{$b}} keys %{$subject_order{$query}}) {
-		
+
 		last if (exists $hit{$query});
-		
+
 		if (exists $subject_length{$subject}){
 			$coverage_subject = sprintf ("%.3f", ($subject_coor{$query}{$subject}/$subject_length{$subject}));
 		} else {
@@ -293,31 +294,13 @@ foreach my $query (sort {$query_order{$a} <=> $query_order{$b}} keys %query_orde
 			$to_print.= "\t".$subject_ec{$subject};
 			$hit{$query}=$subject;
 			$annot_prots_count++;
-			if (exists $hyp{$query}) {$unknown_and_annotated++;}	
-			last;	
+			if (exists $hyp{$query}) {$unknown_and_annotated++;}
+			last;
 		}
-		undef $coverage_subject;		
+		undef $coverage_subject;
 	}
-	print OUT $to_print."\n";	
-}			
+	print OUT $to_print."\n";
+}
 
-
-# ## Compute and print statistics
-# my $total= scalar (keys %query_order);
-# my $partial= sprintf ("%.1f",$annot_prots_count/(scalar (keys %query_order))*100 );
-# my $partial2= sprintf ("%.1f",$unknown_and_annotated/(scalar (keys %query_order))*100 );
-# my $known_and_annotated = $annot_prots_count - $unknown_and_annotated;
-# my $partial3= sprintf ("%.1f",$known_and_annotated/(scalar (keys %query_order))*100 );
-
-
-# print 	"File: $ARGV[0]","\n",
-# 	"Source: $source\n",
-# 	"Annotated proteins\tUnknown Proteins\tTotal proteins: $total\n",
-# 	"$anno ($anno_per\%)\t",scalar keys %hyp," ($hyp_per\%)\n",
-# 	"\nPSIBLAST stats from $psiblast_output\n",
-# 	"$known_and_annotated ($partial3%)\t$unknown_and_annotated ($partial2%)","\t\tTotal: $annot_prots_count ($partial%)\n";
-
-#system ("perl /home/JC/Pipeline/make_table_scripts/order_entries.pl $output_file 00_ini*");
-#system ("gzip $output_file");
 
 exit 1;
