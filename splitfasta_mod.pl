@@ -126,4 +126,3 @@ close(INFILE);
 printf("Created %i sequence files\n",$n);
 
 
-
