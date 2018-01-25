@@ -31,27 +31,159 @@ print <<END;
 <html>
 
 <head>
-	<script type=\"text/javascript\" src=\"http://code.jquery.com/jquery-latest.min.js\"></script>
- 	<link rel=\"stylesheet\" type=\"text/css\" href=\"//cdn.datatables.net/1.10.12/css/jquery.dataTables.css\">
- 	<script type=\"text/javascript\" charset=\"utf8\" src=\"//cdn.datatables.net/1.10.12/js/jquery.dataTables.js\"></script>
+	<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css"/>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/fixedheader/3.1.3/css/fixedHeader.dataTables.min.css"/>
+
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/fixedheader/3.1.3/js/dataTables.fixedHeader.min.js"></script>
+
+	<script>
+	var myVar;
+
+	function myFunction() {
+	    myVar = setTimeout(showPage, 1500);
+	}
+
+	function showPage() {
+	  document.getElementById("loader").style.display = "none";
+	  document.getElementById("myDiv").style.display = "block";
+	  \$('#table1').DataTable().fixedHeader.adjust();
+	}
+
+	</script>
+
+
+	<script>
+        function getQueryParams(qs) {
+                qs = qs.split('+').join(' ');
+                var params =    {},
+                                tokens,
+                                re = /[?&]?([^=]+)=([^&]*)/g;
+
+                while (tokens = re.exec(qs)) {
+                        params[decodeURIComponent(tokens[1])] = decodeURIComponent(tokens[2]);
+                }
+
+                return params;
+        }
+
+
+        \$(document).ready(function (){
+        var query = getQueryParams(document.location.search);
+        var table = \$('#table1').DataTable({
+	"fixedHeader": {
+		header: true,
+		footer: true
+			},
+search: {
+                                                         search: query.filterfiltre,
+							 "caseInsensitive": false
+       }
+    });
+
+	\$('#table1').show();
+	table.fixedHeader.adjust();
+});
+table.fixedHeader.adjust()
+</script>
+<style>
+/* Center the loader */
+\#loader {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 1;
+  width: 150px;
+  height: 150px;
+  margin: -75px 0 0 -75px;
+  border: 16px solid #f3f3f2;
+  border-radius: 50%;
+  border-top: 16px solid #3298db;
+  width: 120px;
+  height: 120px;
+  -webkit-animation: spin 2s linear infinite;
+  animation: spin 2s linear infinite;
+}
+
+\@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+\@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Add animation to "page content" */
+.animate-bottom {
+  position: relative;
+  -webkit-animation-name: animatebottom;
+  -webkit-animation-duration: 1s;
+  animation-name: animatebottom;
+  animation-duration: 1s
+}
+
+\@-webkit-keyframes animatebottom {
+  from { bottom:-100px; opacity:0 }
+  to { bottom:0px; opacity:1 }
+}
+
+\@keyframes animatebottom {
+  from{ bottom:-100px; opacity:0 }
+  to{ bottom:0; opacity:1 }
+}
+
+\#myDiv {
+  display: none;
+  text-align: center;
+}
+
+\#mydiv2 {
+	background-image: url("logo.jpg");
+	text-align:left
+}
+\#column-content {
+  display: inline-block;
+}
+img {
+  vertical-align: middle;
+}
+span {
+  display: inline-block;
+  vertical-align: middle;
+  line-height: 85px;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-size: 24px;
+	font-style: normal;
+	font-variant: normal;
+	font-weight: 500;
+  padding-left: 40px;
+}
+
+body {
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-style: normal;
+        font-variant: normal;
+}
+
+/* for visual purposes */
+\#column-content {
+  border: 1px solid red;
+  position: relative;
+}
+</style>
 </head>
+#<h1><img src="lablogo.png" alt="lablogo" style="width:160px;height:89px;float:left;"><img src="logo.jpg" alt="CABD" style="width:160px;height:89px;float:left;"><span> $table_name proteome annotation</span></h1>
+<h1><img src="lablogo.png" alt="lablogo" style="width:160px;height:89px;float:left;"><img src="logo.jpg" alt="CABD" style="width:160px;height:89px;float:left;"><span> $table_name proteome annotation</span></h1>
+<body onload="myFunction()" style="margin:0;">
+
+<div id="loader"></div>
+<div style="display:none;" id="myDiv" class="animate-bottom">
+<table id="table1" width="100%" class="table table-condensed stripe display compact cell-border" ;>
+<thead>
 END
-
-print 	"<address>By <b>Juan Carlos Gonzalez Sanchez</b> (juancarlosgonzs\@gmail.com) and <b>Nicola Bordin</b> (nbor1\@upo.es)<br>\n",
-		"Centro Andaluz de Biologia del Desarrollo. Universidad Pablo de Olavide. Sevilla<br>\n",
-		"1 May 2015</address>\n",
-
-		"<h1>$table_name ($proteins proteins)</h1>\n\n",
-
-		"<p>The proteins sequeneces in FASTA format used in this analysis can be downloaded\n",
-		"<a href=\"$fasta\" download>here</a>\n",
-		".</p>\n",
-		"<p>The complete table is also available in \n",
-		"<a href=\"$tsv_input\" download>.tsv</a>\n",
-		"format for downloading.</p>\n",
-		"<table id=\"table1\" width=\"100%\" class=\"table table-condensed\">\n",
-		"<thead>\n";
-
 #chomp ($_ = <STDIN>);
 #s?\t?</th><th>?g;
 
@@ -82,7 +214,7 @@ while (my $line = <TSV>) {
 
 		for my $cell(@fields) {
 
-	# The fuck is this?
+	
 	#		if($cell =~ /^(\d|\s)+$/) {
 	#			print "<td align=\"right\">$cell</td>";
 	#		} else {
