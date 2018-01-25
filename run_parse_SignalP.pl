@@ -57,7 +57,5 @@ while (<IN>) {
 close (IN);
 close (OUT);
 
-#system ("perl /home/JC/Pipeline/make_table_scripts/order_entries.pl $parsed_output 00_ini*");
-# system ("gzip -f $parsed_output");
 
 exit 1;
