@@ -2,9 +2,9 @@
 #
 # INITIAL PARSER
 #
-# Version 2.0 May 2015
+# Version 2.0 January 2018
 #
-# Juan Carlos González Sánchez
+# Juan Carlos González Sánchez & Nicola Bordin
 # Centro Andaluz de Biología del Desarrollo (CABD)
 # Universidad Pablo de Olavide, Sevilla
 #
