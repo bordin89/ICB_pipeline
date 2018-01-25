@@ -1,3 +1,6 @@
+#This is an example of our config.txt
+#Modify config_default.txt accordingly and rename it to config.txt
+
 [binaries]
 #specify the paths required by icb.py and cpus (only for certain tools)
 blast = /home/programs/ncbi-blast-2.2.29+/bin/
